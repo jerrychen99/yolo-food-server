@@ -12,30 +12,30 @@ def predict():
         file.save(tmp.name)
         results = model(tmp.name)
 
-    # 假設我們只取第一個結果
     names = model.names
     detections = results[0].boxes
 
     if detections is None or len(detections) == 0:
-        return jsonify({"food": "無法辨識", "calories": "?"})
+        return jsonify({"food": "無法辨識", "calories": "?", "protein": "?"})
 
     cls_id = int(detections.cls[0])
     food_name = names[cls_id]
 
-    # 可以根據 food_name 給個預估熱量
-    food_calories = {
-        "apple": 95,
-        "banana": 105,
-        "sushi": 300,
-        # ...
+    # 食物的熱量與蛋白質（範例）
+    food_info = {
+        "apple": {"calories": 95, "protein": 0.5},
+        "banana": {"calories": 105, "protein": 1.3},
+        "sushi": {"calories": 300, "protein": 12},
+        # 你可以繼續加其他食物...
     }
-    calories = food_calories.get(food_name.lower(), "?")
+
+    info = food_info.get(food_name.lower(), {"calories": "?", "protein": "?"})
 
     return jsonify({
         "food": food_name,
-        "calories": calories
+        "calories": info["calories"],
+        "protein": info["protein"]
     })
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5050)

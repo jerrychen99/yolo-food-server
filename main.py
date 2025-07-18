@@ -23,8 +23,8 @@ def predict():
 
     # 食物的熱量與蛋白質（範例）
     food_info = {
-        "apple": {"calories": 95, "protein": 0.5},
-        "banana": {"calories": 105, "protein": 1.3},
+        "apple": {"calories": 95, "protein": 1},
+        "banana": {"calories": 105, "protein": 2},
         "sushi": {"calories": 300, "protein": 12},
         # 你可以繼續加其他食物...
     }

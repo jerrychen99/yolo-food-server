@@ -33,8 +33,8 @@ def predict():
 
     return jsonify({
         "food": food_name,
-        "calories": str(info["calories"]),
-        "protein": str(info["protein"])
+        "calories": info["calories"],
+        "protein": info["protein"]
     })
 
 if __name__ == "__main__":

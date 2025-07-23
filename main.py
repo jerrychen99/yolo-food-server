@@ -3,7 +3,7 @@ from ultralytics import YOLO
 import tempfile
 
 app = Flask(__name__)
-model = YOLO("best.pt")  # 或你的模型名稱
+model = YOLO("best.pt")
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -14,12 +14,6 @@ def predict():
 
     names = model.names
     detections = results[0].boxes
-
-    if detections is None or len(detections) == 0:
-        return jsonify({"food": "無法辨識", "calories": "?", "protein": "?"})
-
-    cls_id = int(detections.cls[0])
-    food_name = names[cls_id]
 
     food_info = {
         "apple": { "calories": 95, "protein": 1 },
@@ -44,13 +38,19 @@ def predict():
         "yogurt": { "calories": 100, "protein": 10 }
     }
 
-    info = food_info.get(food_name.lower(), {"calories": "?", "protein": "?"})
+    if detections is None or len(detections) == 0:
+        return jsonify({"food": "cannot detect", "calories": "?", "protein": "?"})
 
-    return jsonify({
-        "food": food_name,
-        "calories": info["calories"],
-        "protein": info["protein"]
-    })
+    for box in detections:
+        cls_id = int(box.cls[0])
+        food_name = names[cls_id].lower()
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5050)
+        if food_name in food_info:
+            info = food_info[food_name]
+            return jsonify({
+                "food": food_name,
+                "calories": info["calories"],
+                "protein": info["protein"]
+            })
+
+    return jsonify({"food": "cannot detect", "calories": "?", "protein": "?"})

@@ -4,7 +4,7 @@ import tempfile
 import os
 
 app = Flask(__name__)
-model = YOLO("best.pt")
+model = YOLO("yolov8n.pt")
 
 @app.route('/predict', methods=['POST'])
 def predict():
